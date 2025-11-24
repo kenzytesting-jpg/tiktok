@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TikTok Downloader - Kenzy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#000000; --card:#1a1a1a;
+      --text:#ffffff; --muted:#fff;
+      --primary:#ff0000; --secondary:#AD4AE7;
+      --accent:#666666;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background:radial-gradient(circle at 20% 20%,rgba(255,255,255,.1),transparent 30%),
+                 radial-gradient(circle at 80% 10%,rgba(255,255,255,.08),transparent 25%),
+                 radial-gradient(circle at 50% 90%,rgba(255,255,255,.05),transparent 30%),
+                 var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .main-content{
+      flex:1;
+      padding: 20px 35px 35px;
+      position: relative;
+      z-index: 1;
+      margin-left: 0 !important;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 30px;
+      justify-content: center;
+    }
+    
+    .main-logo-container {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .main-logo-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: conic-gradient(
+        #ffffff 0%, 
+        #ff0000 30%, 
+        #AD4AE7 60%, 
+        #ffffff 100%
+      );
+      animation: rotate 3s linear infinite;
+      padding: 4px;
+    }
+    
+    .main-logo {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      z-index: 1;
+      position: relative;
+      background: #1a1a1a;
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+
+    .main-app-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 0 12px rgba(255,255,255,0.5);
+    }
+    
+    .main-access-info {
+      font-size: 12px;
+      text-align: center;
+      color: var(--muted);
+      background: rgba(255,255,255,0.1);
+      padding: 8px 14px;
+      border-radius: 10px;
+      margin-top: 5px;
+      position: relative;
+      z-index: 1;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .main-access-info::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, 
+        #ffffff 0%, 
+        #ff0000 30%, 
+        #AD4AE7 60%, 
+        #ffffff 100%);
+      border-radius: 12px;
+      z-index: -1;
+      animation: borderGlow 3s linear infinite;
+      background-size: 400% 400%;
+    }
+
+    .container {
+      background: rgba(26, 26, 26, 0.95);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 18px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      max-width: 700px;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      animation: fadeIn 0.8s ease;
+      margin: 0 auto 30px;
+    }
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 18px 18px 0 0;
+    }
+
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-shadow: 0 0 15px rgba(255,255,255,0.3);
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .label {
+      color: #ff0000;
+      font-size: 16px;
+      margin-bottom: 8px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-box {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      border-radius: 12px;
+      outline: none;
+      transition: all 0.3s;
+      font-size: 15px;
+    }
+
+    .action-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: all 0.3s;
+    }
+
+    .progress-container {
+      margin-top: 1.5rem;
+      display: none;
+    }
+
+    /* ---------- DOWNLOAD PROGRESS BAR (DIV) - PREMIUM ---------- */
+    .progress-bar {
+      height: 10px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 0.8rem;
+      position: relative;
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.6);
+    }
+
+    /* the actual fill */
+    .progress {
+      height: 100%;
+      width: 0%;
+      border-radius: 10px;
+      transition: width 300ms linear;
+      position: relative;
+      z-index: 2;
+      /* animated gradient fill */
+      background: linear-gradient(90deg, #ff0000, #ff7a00, #AD4AE7, #ffffff, #ff0000);
+      background-size: 300% 100%;
+      animation: gradientShift 3s linear infinite;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.55), inset 0 0 24px rgba(255,255,255,0.03);
+    }
+
+    /* subtle shimmer overlay */
+    .progress::after {
+      content: "";
+      position: absolute;
+      left: -40%;
+      top: 0;
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02), rgba(255,255,255,0.08));
+      transform: skewX(-20deg);
+      animation: shimmer 2.2s linear infinite;
+      opacity: 0.7;
+      border-radius: 10px;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes shimmer {
+      0% { left: -40%; opacity: 0; }
+      50% { left: 120%; opacity: 0.55; }
+      100% { left: 120%; opacity: 0; }
+    }
+
+    .result-section {
+      background: rgba(26, 26, 26, 0.95);
+      border-radius: 18px;
+      padding: 30px;
+      margin: 0 auto 30px;
+      max-width: 700px;
+      display: none;
+    }
+
+    .download-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .download-option {
+      padding: 1.5rem;
+      border-radius: 16px;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 0, 0, 0.2),
+        rgba(173, 74, 231, 0.2)
+      );
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: #e2e8f0;
+      text-align: center;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 2.5rem 0;
+      color: #64748b;
+      margin-top: 4rem;
+    }
+
+    /* ---------- MUSIC PLAYER (RANGE) - PREMIUM ---------- */
+    /* keep input appearance but overlay dynamic gradient fill via background */
+    #progressBar {
+      width:100%;
+      height:8px;
+      border-radius:20px;
+      appearance:none;
+      cursor:pointer;
+      overflow:hidden;
+      background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      position: relative;
+      transition: background 200ms linear;
+    }
+
+    /* track (webkit) */
+    #progressBar::-webkit-slider-runnable-track {
+      height:8px;
+      border-radius:20px;
+      background: transparent;
+    }
+
+    /* thumb */
+    #progressBar::-webkit-slider-thumb {
+      -webkit-appearance:none;
+      width:14px;
+      height:14px;
+      background:linear-gradient(135deg,#ff0000,#AD4AE7,#ffffff);
+      border-radius:50%;
+      box-shadow:0 0 12px rgba(173,74,231,0.9);
+      cursor:pointer;
+      margin-top:-3px;
+      border:none;
+    }
+
+    /* Firefox */
+    #progressBar::-moz-range-track {
+      height:8px;
+      background: transparent;
+      border-radius:20px;
+    }
+    #progressBar::-moz-range-progress {
+      height:8px;
+      background: linear-gradient(90deg,#ff0000,#AD4AE7,#ffffff);
+      border-radius:20px;
+    }
+    #progressBar::-moz-range-thumb {
+      width:14px;
+      height:14px;
+      background:linear-gradient(135deg,#ff0000,#AD4AE7,#ffffff);
+      border-radius:50%;
+      box-shadow:0 0 12px rgba(173,74,231,0.9);
+      border:none;
+    }
+
+    /* add a glowing pulse when playing */
+    .playing #playBtn {
+      box-shadow: 0 0 24px rgba(173,74,231,0.25), 0 0 40px rgba(255,122,0,0.08);
+      transform: scale(1.02);
+    }
+
+    /* small responsive */
+    @media (max-width:420px) {
+      .container { padding:18px; }
+      .main-app-title { font-size:22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-content">
+
+    <div class="header">
+      <div class="main-logo-container">
+        <div class="main-logo-ring"></div>
+
+        <video class="main-logo" src="https://files.catbox.moe/lkonio.mp4"
+          autoplay loop muted playsinline
+          style="border-radius:50%; width:72px; height:72px; object-fit:cover;">
+        </video>
+
+      </div>
+      <div>
+        <div class="main-app-title">Kenzyabigail</div>
+        <div class="main-access-info"><b>TikTok Tools</b></div>
+      </div>
+    </div>
+
+    <div class="container">
+      <h2 class="section-title"><i class="fab fa-tiktok"></i> TikTok Downloader</h2>
+
+      <div class="input-group">
+        <div class="label"><i class="fas fa-link"></i> Masukkan URL TikTok</div>
+        <input type="text" class="input-box" id="tiktok-url" placeholder="https://www.tiktok.com/@user/video/...">
+      </div>
+
+      <button class="action-btn" id="download-btn">
+        <i class="fas fa-download"></i> Download TikTok
+      </button>
+
+      <div class="progress-container" id="progress-container">
+        <div class="progress-bar">
+          <div class="progress" id="progress-bar"></div>
+        </div>
+        <div class="progress-text" id="progress-text">Mempersiapkan download...</div>
+      </div>
+    </div>
+
+    <div class="result-section" id="result-section">
+      <h3 class="result-title"><i class="fas fa-check-circle"></i> Download Siap!</h3>
+
+      <div class="video-info" id="video-info" style="display:none;">
+        <div class="video-title" id="video-title"></div>
+      </div>
+
+      <div class="download-options">
+        <a href="#" class="download-option" id="download-video">
+          <i class="fas fa-film"></i><br>Download Video
+        </a>
+        <a href="#" class="download-option" id="download-audio">
+          <i class="fas fa-music"></i><br>Download Audio
+        </a>
+      </div>
+    </div>
+
+    <div class="footer">
+      © 2025 - Kenzyabigail. All rights reserved.
+    </div>
+  </div>
+
+<div class="music-player-premium" style="
+  width:100%;
+  padding:18px;
+  position:fixed;
+  bottom:0;
+  left:0;
+  background:rgba(25,25,25,0.65);
+  backdrop-filter:blur(18px);
+  border-top:1px solid rgba(255,255,255,0.12);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  z-index:9999;
+  font-family:'Poppins', sans-serif;
+  color:white;
+">
+
+  <div style="display:flex; align-items:center; gap:14px;">
+    
+    <img id="coverArt" src="https://files.catbox.moe/7i9lg4.jpg" 
+         style="width:52px; height:52px; border-radius:12px; object-fit:cover;">
+
+    <div style="flex:1;">
+      <div style="font-size:15px; font-weight:600;">Pemeran utama</div>
+      <div style="font-size:12px; opacity:0.75;">The jhansen</div>
+    </div>
+
+    <button onclick="togglePlay()" id="playBtn" style="
+      width:46px;
+      height:46px;
+      border-radius:50%;
+      background:white;
+      color:black;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+      font-weight:900;
+      border:none;
+      box-shadow:0 0 14px rgba(255,255,255,0.45);
+    ">
+      ▶
+    </button>
+  </div>
+
+  <input type="range" id="progressBar" value="0" min="0" max="100">
+
+  <div style="display:flex; justify-content:space-between; font-size:12px; opacity:0.8;">
+    <span id="currentTime">0:00</span>
+    <span id="totalTime">0:00</span>
+  </div>
+
+  <audio id="audioPlayer">
+    <source src="https://files.catbox.moe/fzx63u.bin" type="audio/mp3">
+  </audio>
+
+</div>
+
+<script>
+/* ----------------------
+   Audio + Music Player
+   ---------------------- */
+const audio = document.getElementById("audioPlayer");
+const playBtn = document.getElementById("playBtn");
+const progress = document.getElementById("progressBar");
+const cover = document.getElementById("coverArt");
+const playerWrapper = document.querySelector('.music-player-premium');
+
+function applyRangeBackground(el, percent) {
+  // animated gradient fill on the left up to percent, darker track after percent
+  const grad = `linear-gradient(90deg,
+    rgba(255,255,255,0.02) 0%,
+    rgba(255,0,0,0.18) 0%,
+    rgba(255,122,0,0.18) 10%,
+    rgba(173,74,231,0.2) 40%,
+    rgba(255,255,255,0.18) 70%,
+    rgba(255,255,255,0.02) ${percent}%,
+    rgba(255,255,255,0.03) ${percent}%,
+    rgba(255,255,255,0.03) 100%
+  )`;
+  el.style.background = grad;
+  // add subtle moving background position to create motion
+  el.style.backgroundSize = '200% 100%';
+  el.style.animation = 'none';
+  // force a slight motion on the thumb background by toggling background-position
+  el.style.backgroundPosition = `${(Date.now() % 1000) / 10}% 50%`;
+}
+
+audio.addEventListener("loadedmetadata", () => {
+  document.getElementById("totalTime").innerText = formatTime(audio.duration);
+  // initialize background
+  applyRangeBackground(progress, 0);
+});
+
+audio.addEventListener("timeupdate", () => {
+  if (!audio.duration || isNaN(audio.duration)) return;
+  const percent = (audio.currentTime / audio.duration) * 100;
+  progress.value = percent;
+  document.getElementById("currentTime").innerText = formatTime(audio.currentTime);
+  applyRangeBackground(progress, percent.toFixed(2) + '%');
+  // add playing class for small glow
+  if (!audio.paused) playerWrapper.classList.add('playing'); else playerWrapper.classList.remove('playing');
+});
+
+progress.addEventListener("input", () => {
+  if (!audio.duration || isNaN(audio.duration)) return;
+  audio.currentTime = (progress.value / 100) * audio.duration;
+  applyRangeBackground(progress, progress.value + '%');
+});
+
+function togglePlay() {
+  if (audio.paused) {
+    audio.play().catch(() => {}); // ignore autoplay block
+    playBtn.innerHTML = "⏸";
+    cover.style.animation = "rotateCover 8s linear infinite";
+    playerWrapper.classList.add('playing');
+  } else {
+    audio.pause();
+    playBtn.innerHTML = "▶";
+    cover.style.animation = "none";
+    playerWrapper.classList.remove('playing');
+  }
+}
+
+function formatTime(sec) {
+  if (!sec || isNaN(sec) || !isFinite(sec)) return "0:00";
+  const m = Math.floor(sec / 60);
+  let s = Math.floor(sec % 60);
+  if (s < 10) s = "0" + s;
+  return `${m}:${s}`;
+}
+
+/* tiny interval to animate input gradient position (makes it feel "alive") */
+setInterval(() => {
+  const bg = progress.style.background;
+  if (bg && bg.indexOf('linear-gradient') === 0) {
+    // nudge background-position for motion effect
+    const cur = progress.style.backgroundPosition || '0% 50%';
+    const x = (parseFloat(cur) || 0) + 0.6;
+    progress.style.backgroundPosition = (x % 200) + '% 50%';
+  }
+}, 120);
+
+/* ----------------------
+   Download progress (existing logic)
+   ---------------------- */
+const urlInput = document.getElementById('tiktok-url');
+const downloadBtn = document.getElementById('download-btn');
+const progressContainer = document.getElementById('progress-container');
+const progressBar = document.getElementById('progress-bar'); // <-- div fill
+const progressText = document.getElementById('progress-text');
+const resultSection = document.getElementById('result-section');
+const videoTitle = document.getElementById('video-title');
+const videoInfo = document.getElementById('video-info');
+const downloadVideo = document.getElementById('download-video');
+const downloadAudio = document.getElementById('download-audio');
+
+const API_ENDPOINTS = [
+  {
+    name: "TikWM",
+    url: (url) => `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`,
+    method: "GET",
+    parse: (data) => ({
+      success: true,
+      video: data.data.play,
+      music: data.data.music,
+      title: data.data.title
+    })
+  }
+];
+
+function setLoading(v) {
+  downloadBtn.disabled = v;
+  downloadBtn.innerHTML = v ? "<i class='fas fa-spinner fa-spin'></i> Memproses..." : "<i class='fas fa-download'></i> Download TikTok";
+}
+
+function updateProgress(p, t) {
+  // p is 0..100
+  progressBar.style.width = p + "%";
+  progressText.textContent = t;
+  // subtle scale effect when updating
+  progressBar.style.transform = "scaleY(1.00)";
+  // ensure gradient animation is running (already via CSS)
+  if (p >= 100) {
+    // finish shimmer
+    progressBar.style.boxShadow = "0 6px 18px rgba(0,0,0,0.45), inset 0 0 30px rgba(0,0,0,0.15)";
+  }
+}
+
+async function fetchData(url) {
+  const endpoint = API_ENDPOINTS[0];
+  const res = await fetch(endpoint.url(url));
+  const json = await res.json();
+  return endpoint.parse(json);
+}
+
+downloadBtn.onclick = async () => {
+  let url = urlInput.value.trim();
+  if (!url) return alert("Masukkan URL!");
+
+  setLoading(true);
+  progressContainer.style.display = "block";
+  updateProgress(10, "Memeriksa URL...");
+
+  try {
+    // simulate progress while fetching
+    updateProgress(30, "Mengambil data...");
+    let data = await fetchData(url);
+
+    // animate to near complete
+    updateProgress(90, "Menyiapkan tautan...");
+    await new Promise(r => setTimeout(r, 350));
+
+    videoTitle.textContent = data.title || "Video TikTok";
+    videoInfo.style.display = "block";
+
+    downloadVideo.onclick = () => {
+      window.open(data.video, "_blank");
+    };
+
+    downloadAudio.onclick = () => {
+      window.open(data.music, "_blank");
+    };
+
+    // finalize
+    updateProgress(100, "Selesai!");
+    setTimeout(() => {
+      resultSection.style.display = "block";
+      progressContainer.style.display = "none";
+      // reset visual for next time
+      progressBar.style.width = "0%";
+      progressBar.style.transform = "scaleY(1)";
+    }, 500);
+
+  } catch (e) {
+    alert("Gagal mengambil data!");
+    updateProgress(0, "Gagal");
+    progressContainer.style.display = "none";
+  }
+
+  setLoading(false);
+};
+</script>
+
+</body>
+</html>
